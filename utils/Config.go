@@ -1,4 +1,4 @@
-package Model
+package Tools
 
 type EsignInitConfig struct {
 	host         string

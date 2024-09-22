@@ -11,7 +11,7 @@ import (
 
 func main() {
 	// 配置参数(作为全局执行一次即可)
-	Service.EsignInitService()
+	EsignInit()
 
 	// 获取文件上传地址-start
 	filePath := "table.docx"
@@ -32,4 +32,17 @@ func main() {
 	result := Tools.UpLoadFile(initResult.Data.FileUploadUrl, filePath, contentMd5, "application/octet-stream")
 	fmt.Println(result)
 	// 上传文件-end
+}
+
+const (
+	host         = "https://smlopenapi.esign.cn"
+	projectId    = "7439012567"
+	projectScert = "c0d5ea7e936a53d515938cd5dabcba37"
+)
+
+func EsignInit() {
+	config := Tools.InstaneEsignInitConfig()
+	config.SetHost(host)
+	config.SetProjectId(projectId)
+	config.SetProjectScert(projectScert)
 }

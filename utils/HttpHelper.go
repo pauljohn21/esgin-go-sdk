@@ -10,8 +10,6 @@ import (
 	"os"
 	"strconv"
 	"time"
-
-	Model "esgin-go-sdk/model"
 )
 
 type Res[T any] struct {
@@ -101,11 +99,11 @@ func UpLoadFile(uploadUrl string, filePath string, contentMD5 string, contentTyp
 
 func SendCommHttp[T any](apiUrl string, dataJsonStr string, method string) (Res[T], error) {
 	log.Println("请求参数JSON字符串:" + dataJsonStr)
-	httpUrl := Model.InstaneEsignInitConfig().Host() + apiUrl
+	httpUrl := InstaneEsignInitConfig().Host() + apiUrl
 	log.Println("发送地址: " + httpUrl)
 	md5Str := DohashMd5(dataJsonStr)
 	message := AppendSignDataString(method, "*/*", md5Str, "application/json; charset=UTF-8", "", "", apiUrl)
-	reqSignature := DoSignatureBase64(message, Model.InstaneEsignInitConfig().ProjectScert())
+	reqSignature := DoSignatureBase64(message, InstaneEsignInitConfig().ProjectScert())
 	// 初始化接口返回值
 	res, err := SendHttp[T](httpUrl, dataJsonStr, method, buildCommHeader(md5Str, reqSignature))
 	return res, err
@@ -113,7 +111,7 @@ func SendCommHttp[T any](apiUrl string, dataJsonStr string, method string) (Res[
 
 func buildCommHeader(contentMD5 string, reqSignature string) (header map[string]string) {
 	headers := map[string]string{}
-	headers["X-Tsign-Open-App-Id"] = Model.InstaneEsignInitConfig().ProjectId()
+	headers["X-Tsign-Open-App-Id"] = InstaneEsignInitConfig().ProjectId()
 	headers["X-Tsign-Open-Ca-Timestamp"] = strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 	headers["Accept"] = "*/*"
 	headers["X-Tsign-Open-Ca-Signature"] = reqSignature
