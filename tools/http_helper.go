@@ -3,6 +3,7 @@ package Tools
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -52,6 +53,7 @@ func SendHttp[T any](apiUrl string, data string, method string, headers map[stri
 
 // 文件上传
 func UpLoadFile(uploadUrl string, filePath string, contentMD5 string, contentType string) string {
+	fmt.Printf("开始上传uploadUrl %s\n", uploadUrl)
 	// 创建一个缓冲区对象,后面的要上传的body都存在这个缓冲区里
 	bodyBuf := &bytes.Buffer{}
 	// 要上传的文件
