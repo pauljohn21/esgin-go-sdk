@@ -16,14 +16,16 @@ func main() {
 	// 获取文件上传地址-start
 	filePath := "table.docx"
 	contentMd5, size := Tools.CountFileMd5(filePath)
-	var getFileUploadUrlInfo Model.GetFileUploadUrlInfo
-	getFileUploadUrlInfo.ContentMd5 = contentMd5
-	getFileUploadUrlInfo.ContentType = "application/octet-stream"
-	getFileUploadUrlInfo.ConvertToPDF = true
-	getFileUploadUrlInfo.FileName = "table.docx"
-	getFileUploadUrlInfo.FileSize = size
+	FileUploadUrlInfo := Model.GetFileUploadUrlInfo{
+		ContentMd5:   contentMd5,
+		ContentType:  "application/octet-stream",
+		ConvertToPDF: true,
+		FileName:     "table.docx",
+		FileSize:     size,
+	}
+
 	var getFileUploadUrlInfoJson string
-	if data, err := json.Marshal(getFileUploadUrlInfo); err == nil {
+	if data, err := json.Marshal(FileUploadUrlInfo); err == nil {
 		getFileUploadUrlInfoJson = string(data)
 	}
 	initResult := Service.GetFileUploadUrl(getFileUploadUrlInfoJson)

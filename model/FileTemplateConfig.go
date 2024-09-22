@@ -8,3 +8,7 @@ type GetFileUploadUrlInfo struct {
 	FileName     string `json:"fileName,omitempty"`
 	FileSize     int64  `json:"fileSize,omitempty"`
 }
+type FileTemplatereq struct {
+	FileId        string `json:"fileId"`
+	FileUploadUrl string `json:"fileUploadUrl"`
+}
