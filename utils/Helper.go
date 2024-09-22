@@ -87,7 +87,7 @@ func CountFileMd5(filePath string) (string, int64) {
 		buf := make([]byte, blockSize)
 
 		file.Read(buf)
-		io.Writer.Write(hash, buf)
+		io.WriteString(hash, string(buf))
 	}
 
 	return base64.StdEncoding.EncodeToString(hash.Sum(nil)), fileSize

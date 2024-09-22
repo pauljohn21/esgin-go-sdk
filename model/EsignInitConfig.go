@@ -1,10 +1,4 @@
-package Tools
-
-type Res[T any] struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
-	Data    T      `json:"data"`
-}
+package Model
 
 type EsignInitConfig struct {
 	host         string

@@ -10,30 +10,41 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	Model "XuanYuanAPI-Golang/model"
 )
 
-func SendHttp[T any](apiUrl string, data string, method string, headers map[string]string) (*Res[T], error) {
-	// API接口返回值
+type Res[T any] struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	Data    T      `json:"data"`
+}
+
+// ParseResponse 是一个假定存在的函数，用于将 byte 切片转换为目标类型 Res[T]。
+func ParseResponse[T any](body []byte) (Res[T], error) {
 	var res Res[T]
+	if err := json.Unmarshal(body, &res); err != nil {
+		return res, fmt.Errorf("无法解析响应体: %v", err)
+	}
+	return res, nil
+}
+
+// SendHttp 发送 HTTP 请求并返回结果。
+// T 表示返回数据的类型，可以是任何实现了 json.Unmarshaler 接口的类型。
+func SendHttp[T any](apiUrl string, data string, method string, headers map[string]string) (res Res[T], err error) {
 	url := apiUrl
 	jsonStr := []byte(data)
 	var req *http.Request
-	var err error
+
 	if method == "GET" || method == "DELETE" {
 		req, err = http.NewRequest(method, url, nil)
-		if err != nil {
-			// 根据实际情况选择合适的错误处理方式
-			log.Println("Failed to create HTTP request:", err)
-			return nil, err
-		}
 	} else {
 		req, err = http.NewRequest(method, url, bytes.NewBuffer(jsonStr))
-		if err != nil {
-			// 根据实际情况选择合适的错误处理方式
-			log.Println("Failed to create HTTP request:", err)
-			return nil, err
-		}
 	}
+	if err != nil {
+		return
+	}
+
 	for k, v := range headers {
 		req.Header.Set(k, v)
 	}
@@ -41,14 +52,18 @@ func SendHttp[T any](apiUrl string, data string, method string, headers map[stri
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return
 	}
 	defer resp.Body.Close()
-	err = json.NewDecoder(resp.Body).Decode(&res)
+
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return
 	}
-	return &res, nil
+
+	// 尝试将响应体解析为目标类型 Res[T]
+	res, err = ParseResponse[T](body)
+	return
 }
 
 // 文件上传
@@ -84,21 +99,21 @@ func UpLoadFile(uploadUrl string, filePath string, contentMD5 string, contentTyp
 	return string(bytes)
 }
 
-func SendCommHttp[T any](apiUrl string, dataJsonStr string, method string) (*Res[T], error) {
+func SendCommHttp[T any](apiUrl string, dataJsonStr string, method string) (Res[T], error) {
 	log.Println("请求参数JSON字符串:" + dataJsonStr)
-	httpUrl := InstaneEsignInitConfig().host + apiUrl
+	httpUrl := Model.InstaneEsignInitConfig().Host() + apiUrl
 	log.Println("发送地址: " + httpUrl)
 	md5Str := DohashMd5(dataJsonStr)
 	message := AppendSignDataString(method, "*/*", md5Str, "application/json; charset=UTF-8", "", "", apiUrl)
-	reqSignature := DoSignatureBase64(message, InstaneEsignInitConfig().projectScert)
+	reqSignature := DoSignatureBase64(message, Model.InstaneEsignInitConfig().ProjectScert())
 	// 初始化接口返回值
-	initResult, err := SendHttp[T](httpUrl, dataJsonStr, method, buildCommHeader(md5Str, reqSignature))
-	return initResult, err
+	res, err := SendHttp[T](httpUrl, dataJsonStr, method, buildCommHeader(md5Str, reqSignature))
+	return res, err
 }
 
 func buildCommHeader(contentMD5 string, reqSignature string) (header map[string]string) {
 	headers := map[string]string{}
-	headers["X-Tsign-Open-App-Id"] = InstaneEsignInitConfig().projectId
+	headers["X-Tsign-Open-App-Id"] = Model.InstaneEsignInitConfig().ProjectId()
 	headers["X-Tsign-Open-Ca-Timestamp"] = strconv.FormatInt(time.Now().UnixNano()/1e6, 10)
 	headers["Accept"] = "*/*"
 	headers["X-Tsign-Open-Ca-Signature"] = reqSignature
