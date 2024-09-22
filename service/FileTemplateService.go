@@ -1,15 +1,20 @@
 package Service
 
 import (
+	"encoding/json"
 	"log"
 
-	Model "XuanYuanAPI-Golang/model"
-	Tools "XuanYuanAPI-Golang/utils"
+	Model "esgin-go-sdk/model"
+	Tools "esgin-go-sdk/utils"
 )
 
-func GetFileUploadUrl(dataJsonStr string) Tools.Res[Model.FileTemplatereq] {
+func GetFileUploadUrl(data Model.FileUploadUrlInfo) Tools.Res[Model.FileTemplatereq] {
 	apiUrl := "/v3/files/file-upload-url"
 	log.Println("获取文件上传地址：--------------")
+	var dataJsonStr string
+	if data, err := json.Marshal(data); err == nil {
+		dataJsonStr = string(data)
+	}
 	initResult, err := Tools.SendCommHttp[Model.FileTemplatereq](apiUrl, dataJsonStr, "POST")
 	log.Println("返回参数：------------------")
 	log.Println(initResult)

@@ -1,12 +1,12 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
+	"log"
 
-	Model "XuanYuanAPI-Golang/model"
-	Service "XuanYuanAPI-Golang/service"
-	Tools "XuanYuanAPI-Golang/utils"
+	Model "esgin-go-sdk/model"
+	Service "esgin-go-sdk/service"
+	Tools "esgin-go-sdk/utils"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 	// 获取文件上传地址-start
 	filePath := "table.docx"
 	contentMd5, size := Tools.CountFileMd5(filePath)
-	FileUploadUrlInfo := Model.GetFileUploadUrlInfo{
+	fileUploadUrlInfo := Model.FileUploadUrlInfo{
 		ContentMd5:   contentMd5,
 		ContentType:  "application/octet-stream",
 		ConvertToPDF: true,
@@ -24,17 +24,9 @@ func main() {
 		FileSize:     size,
 	}
 
-	var getFileUploadUrlInfoJson string
-	if data, err := json.Marshal(FileUploadUrlInfo); err == nil {
-		getFileUploadUrlInfoJson = string(data)
-	}
-	initResult := Service.GetFileUploadUrl(getFileUploadUrlInfoJson)
-	// getFileUploadUrlData := Tools.BytetoJson(initResult)["data"]
-	// getFileUploadUrlDataMap := getFileUploadUrlData.(map[string]interface{})
-	// fileId := getFileUploadUrlDataMap["fileId"]
-	// uploadUrl := getFileUploadUrlDataMap["fileUploadUrl"]
-	fmt.Println(initResult.Data.FileId)
-	fmt.Println(initResult.Data.FileUploadUrl)
+	initResult := Service.GetFileUploadUrl(fileUploadUrlInfo)
+
+	log.Println("文件id: " + initResult.Data.FileId)
 
 	// 上传文件-start
 	result := Tools.UpLoadFile(initResult.Data.FileUploadUrl, filePath, contentMd5, "application/octet-stream")

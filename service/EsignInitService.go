@@ -1,8 +1,6 @@
 package Service
 
-import (
-	Beans "XuanYuanAPI-Golang/model"
-)
+import Model "esgin-go-sdk/model"
 
 const (
 	host         = "https://smlopenapi.esign.cn"
@@ -11,7 +9,7 @@ const (
 )
 
 func EsignInitService() {
-	config := Beans.InstaneEsignInitConfig()
+	config := Model.InstaneEsignInitConfig()
 	config.SetHost(host)
 	config.SetProjectId(projectId)
 	config.SetProjectScert(projectScert)

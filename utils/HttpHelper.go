@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"time"
 
-	Model "XuanYuanAPI-Golang/model"
+	Model "esgin-go-sdk/model"
 )
 
 type Res[T any] struct {

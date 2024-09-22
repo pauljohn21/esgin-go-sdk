@@ -1,3 +1,3 @@
-module XuanYuanAPI-Golang
+module esgin-go-sdk
 
 go 1.23.1
