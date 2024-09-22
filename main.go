@@ -1,8 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"esgin-go-sdk/service"
+)
 
 func main() {
-	fmt.Println("Hello, world!")
+	service.EsignInitService()
 
+	res := service.DocTemplatesList()
+	fmt.Println(res.Data)
 }
