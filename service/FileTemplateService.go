@@ -4,8 +4,9 @@ import (
 	"encoding/json"
 	"log"
 
-	Model "esgin-go-sdk/model"
-	Tools "esgin-go-sdk/utils"
+	Tools "github.com/pauljohn21/esgin-go-sdk/utils"
+
+	Model "github.com/pauljohn21/esgin-go-sdk/model"
 )
 
 func GetFileUploadUrl(data Model.FileUploadUrlInfo) Tools.Res[Model.FileTemplatereq] {

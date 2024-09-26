@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
-	Model "esgin-go-sdk/model"
-	Service "esgin-go-sdk/service"
-	Tools "esgin-go-sdk/utils"
+	Model "github.com/pauljohn21/esgin-go-sdk/model"
+	Service "github.com/pauljohn21/esgin-go-sdk/service"
+	Tools "github.com/pauljohn21/esgin-go-sdk/utils"
 )
 
 func main() {
@@ -14,7 +14,7 @@ func main() {
 	EsignInit()
 
 	// 获取文件上传地址-start
-	filePath := "demo.docx"
+	filePath := "./file/demo.docx"
 	contentMd5, size := Tools.CountFileMd5(filePath)
 	fileUploadUrlInfo := Model.FileUploadUrlInfo{
 		ContentMd5:   contentMd5,
