@@ -14,13 +14,13 @@ func main() {
 	EsignInit()
 
 	// 获取文件上传地址-start
-	filePath := "table.docx"
+	filePath := "demo.docx"
 	contentMd5, size := Tools.CountFileMd5(filePath)
 	fileUploadUrlInfo := Model.FileUploadUrlInfo{
 		ContentMd5:   contentMd5,
 		ContentType:  "application/octet-stream",
 		ConvertToPDF: true,
-		FileName:     "table.docx",
+		FileName:     "测试0924.docx",
 		FileSize:     size,
 	}
 
