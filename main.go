@@ -14,7 +14,7 @@ func main() {
 	EsignInit()
 
 	// 获取文件上传地址-start
-	filePath := "./file/demo.docx"
+	filePath := "file/demo.docx"
 	contentMd5, size := Tools.CountFileMd5(filePath)
 	fileUploadUrlInfo := Model.FileUploadUrlInfo{
 		ContentMd5:   contentMd5,
